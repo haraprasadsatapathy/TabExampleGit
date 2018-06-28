@@ -1,0 +1,161 @@
+implementation 'com.roughike:bottom-bar:2.3.1'
+
+public class TabMessage {
+    public static String get(int menuItemId, boolean isReselection) {
+        String message = "Content for ";
+
+        switch (menuItemId) {
+            case R.id.tab_recents:
+                message += "recents";
+                break;
+            case R.id.tab_favorites:
+                message += "favorites";
+                break;
+            case R.id.tab_nearby:
+                message += "nearby";
+                break;
+            case R.id.tab_friends:
+                message += "friends";
+                break;
+            case R.id.tab_food:
+                message += "food";
+                break;
+        }
+
+        if (isReselection) {
+            message += " WAS RESELECTED! YAY!";
+        }
+
+        return message;
+    }
+}
+
+
+
+public class TabsActivity extends Activity {
+    private TextView messageView;
+    Button btnTab;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_three_tabs);
+
+        messageView = (TextView) findViewById(R.id.messageView);
+        btnTab=(Button)findViewById(R.id.btnMessage);
+        btnTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(TabsActivity.this,TabTwoActivity.class);
+                startActivity(intent);
+            }
+        });
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                Log.i("TabId", String.valueOf(tabId));
+
+                messageView.setText(TabMessage.get(tabId, false));
+            }
+        });
+
+        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            @Override
+            public void onTabReSelected(@IdRes int tabId) {
+                Toast.makeText(getApplicationContext(), TabMessage.get(tabId, true), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+}
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/messageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomBar"
+        android:gravity="center"
+        android:text="Tab" />
+
+    <Button
+        android:id="@+id/btnMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:text="Tab" />
+
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        app:bb_tabXmlResource="@xml/bottombar_tabs_five" />
+
+</RelativeLayout>
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        id="@+id/tab_recents"
+        title="Recents" />
+    <tab
+        id="@+id/tab_favorites"
+        title="Favorites" />
+    <tab
+        id="@+id/tab_nearby"
+        title="Nearby" />
+    <tab
+        id="@+id/tab_friends"
+        title="Friends" />
+    <tab
+        id="@+id/tab_food"
+        title="Food" />
+</tabs>
+
+
+
+public class TabTwoActivity extends AppCompatActivity {
+    private TextView messageView;
+    Button btnTab;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_three_tabs);
+
+        messageView = (TextView) findViewById(R.id.messageView);
+        btnTab=(Button)findViewById(R.id.btnMessage);
+        btnTab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(TabTwoActivity.this,TabTwoActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                Log.i("TabId", String.valueOf(tabId));
+                messageView.setText(TabMessage.get(tabId, false));
+            }
+        });
+
+        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
+            @Override
+            public void onTabReSelected(@IdRes int tabId) {
+                Toast.makeText(getApplicationContext(), TabMessage.get(tabId, true), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+}//
